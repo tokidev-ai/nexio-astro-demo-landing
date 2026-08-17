@@ -1,0 +1,21 @@
+{
+  "order": 1,
+  "price": 9400000,
+  "beds": 6, "baths": 7, "area": 1120,
+  "type": "villa", "status": "available", "featured": true,
+  "areaKey": "urubo",
+  "coords": { "lng": -63.2812, "lat": -17.7385 },
+  "image": "../../assets/properties/hero-twilight.jpg",
+  "es": {
+    "name": "Villa Aurelia",
+    "area": "Urubó Hills",
+    "blurb": "Tres volúmenes de vidrio sobre una piscina de borde infinito, orientados para perder el sol de la tarde.",
+    "alt": "Villa contemporánea a la hora azul con piscina iluminada"
+  },
+  "en": {
+    "name": "Villa Aurelia",
+    "area": "Urubó Hills",
+    "blurb": "Three glass volumes over an infinity edge, oriented to lose the afternoon sun.",
+    "alt": "Contemporary villa at blue hour with a lit infinity pool"
+  }
+}

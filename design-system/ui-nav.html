@@ -1,0 +1,398 @@
+<!-- @dsCard group="Components" name="Navigation" subtitle="Transparent → glass on scroll, ES/EN toggle, mobile" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Navigation — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .stage {
+    position: relative; border-radius: var(--r-md); overflow: hidden;
+    background-image: url("img/hero-facade.jpg");
+    background-size: cover; background-position: center;
+    min-height: 190px;
+  }
+  /* Top scrim — the transparent nav always needs something under it, or links
+     land on unpredictable highlights in the photograph. */
+  .stage::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 50%;
+    background: linear-gradient(to bottom, rgba(12,10,9,0.72), rgba(12,10,9,0));
+    pointer-events: none;
+  }
+  .stage--plain { background: none; min-height: 0; }
+  .stage--plain::before { display: none; }
+  .stage > .nav { position: relative; }
+
+  .nav {
+    display: flex; align-items: center; gap: var(--space-6);
+    padding: var(--space-4) var(--space-5);
+  }
+  /* Belt-and-braces with the scrim: a shadow for the brightest photographs. */
+  .nav:not(.nav--glass) .brand,
+  .nav:not(.nav--glass) .links a { text-shadow: 0 1px 10px rgba(12,10,9,0.85); }
+
+  .nav--glass {
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    letter-spacing: 0.02em;
+    color: var(--bone);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .brand span { color: var(--gold-hi); }
+
+  .links { display: flex; gap: var(--space-5); margin-left: auto; }
+  .links a {
+    position: relative;
+    font-size: var(--fs-sm); font-weight: var(--fw-medium);
+    color: var(--bone); text-decoration: none;
+    padding: var(--space-2) 0;
+    opacity: 0.85;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+    height: 1px; background: var(--gold-hi);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .links a:hover { opacity: 1; }
+  .links a:hover::after, .links a[aria-current="page"]::after { transform: scaleX(1); }
+  .links a[aria-current="page"] { opacity: 1; }
+
+  /* Language toggle — a real radio group, not a dropdown */
+  .lang {
+    display: inline-flex; align-items: center;
+    border: 1px solid var(--glass-brd); border-radius: var(--r-pill);
+    padding: 2px; background: rgba(12,10,9,0.35);
+  }
+  .lang button {
+    min-width: 40px; min-height: 32px; padding: 0 var(--space-2);
+    border: 0; border-radius: var(--r-pill); background: transparent;
+    color: var(--muted); font-size: var(--fs-xs); font-weight: var(--fw-semi);
+    letter-spacing: 0.06em;
+    transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  }
+  .lang button[aria-pressed="true"] { background: var(--bone); color: var(--ink); }
+  .lang button:hover:not([aria-pressed="true"]) { color: var(--bone); }
+
+  .cta {
+    display: inline-flex; align-items: center;
+    min-height: 44px; padding: 0 var(--space-4);
+    border-radius: var(--r-sm);
+    background: var(--gold); color: var(--gold-ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semi); text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+  .cta:hover { background: var(--gold-hi); }
+
+  .burger {
+    display: grid; place-items: center;
+    width: 44px; height: 44px; border: 1px solid var(--glass-brd);
+    border-radius: var(--r-sm); background: transparent; color: var(--bone);
+  }
+  .burger svg { width: 20px; height: 20px; }
+
+  .mobile { width: 375px; max-width: 100%; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; align-self: flex-start; }
+  .sheet { background: var(--stone); border-top: 1px solid var(--border); padding: var(--space-3); }
+  .sheet a {
+    display: flex; align-items: center; min-height: 48px;
+    padding: 0 var(--space-3); border-radius: var(--r-sm);
+    color: var(--bone); text-decoration: none; font-size: var(--fs-base);
+  }
+  .sheet a:hover { background: var(--stone-2); }
+  .sheet hr { border: 0; border-top: 1px solid var(--border); margin: var(--space-2) 0; }
+
+  .caption { font-size: var(--fs-xs); color: var(--faint); margin: var(--space-3) 0 var(--space-6); }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">At rest — over the hero</p>
+    <p class="ds-note">
+      The nav starts transparent so the hero photograph reads full-bleed. Links carry a text shadow
+      only where they must sit on unpredictable imagery.
+    </p>
+    <div class="stage">
+      <nav class="nav" aria-label="Primary">
+        <a href="#" class="brand">NEXIO<span>.</span></a>
+        <div class="links">
+          <a href="#" aria-current="page">Residences</a>
+          <a href="#">The Office</a>
+          <a href="#">Journal</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" aria-pressed="true">ES</button>
+          <button type="button" aria-pressed="false">EN</button>
+        </div>
+        <a href="#" class="cta">Private viewing</a>
+      </nav>
+    </div>
+    <p class="caption">Transparent · scroll position 0</p>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Scrolled — glass</p>
+    <p class="ds-note">
+      Past 80px the bar fades to glass over 250ms. The blur is the second and final approved use of
+      glassmorphism in the product.
+    </p>
+    <div class="stage stage--plain">
+      <nav class="nav nav--glass" aria-label="Primary">
+        <a href="#" class="brand">NEXIO<span>.</span></a>
+        <div class="links">
+          <a href="#" aria-current="page">Residences</a>
+          <a href="#">The Office</a>
+          <a href="#">Journal</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" aria-pressed="true">ES</button>
+          <button type="button" aria-pressed="false">EN</button>
+        </div>
+        <a href="#" class="cta">Private viewing</a>
+      </nav>
+    </div>
+    <p class="caption">Glass · scroll &gt; 80px</p>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">375px — collapsed &amp; open</p>
+    <div style="display:flex; gap:var(--space-5); flex-wrap:wrap">
+      <div class="mobile">
+        <nav class="nav nav--glass" style="gap:var(--space-3); padding:var(--space-3)" aria-label="Primary">
+          <a href="#" class="brand" style="font-size:var(--fs-base)">NEXIO<span>.</span></a>
+          <div style="margin-left:auto; display:flex; gap:var(--space-2); align-items:center">
+            <div class="lang" role="group" aria-label="Language">
+              <button type="button" aria-pressed="true">ES</button>
+              <button type="button" aria-pressed="false">EN</button>
+            </div>
+            <button type="button" class="burger" aria-label="Open menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <div class="mobile">
+        <nav class="nav nav--glass" style="gap:var(--space-3); padding:var(--space-3)" aria-label="Primary">
+          <a href="#" class="brand" style="font-size:var(--fs-base)">NEXIO<span>.</span></a>
+          <div style="margin-left:auto; display:flex; gap:var(--space-2); align-items:center">
+            <div class="lang" role="group" aria-label="Language">
+              <button type="button" aria-pressed="true">ES</button>
+              <button type="button" aria-pressed="false">EN</button>
+            </div>
+            <button type="button" class="burger" aria-label="Close menu" aria-expanded="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </nav>
+        <div class="sheet">
+          <a href="#">Residences</a>
+          <a href="#">The Office</a>
+          <a href="#">Journal</a>
+          <a href="#">Contact</a>
+          <hr>
+          <a href="#" class="cta" style="justify-content:center">Private viewing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Rules</p>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+      <li>Language is a two-state toggle with <code>aria-pressed</code>, never a select. It swaps
+          the route (<code>/</code> ↔ <code>/en/</code>) and preserves scroll position.</li>
+      <li>The open mobile sheet traps focus and closes on Escape.</li>
+      <li>The nav CTA is the one exception to "one gold button per viewport" — it is chrome, not
+          content, and never appears in the same band as a section CTA.</li>
+      <li>The underline grows via <code>transform: scaleX</code>, never <code>width</code>.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

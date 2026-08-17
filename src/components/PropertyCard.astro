@@ -1,0 +1,182 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { useTranslations, formatPrice, formatArea } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+  property: CollectionEntry<'properties'>;
+  /** The first row of cards is above the fold on desktop; those load eagerly. */
+  eager?: boolean;
+}
+const { lang, property, eager = false } = Astro.props;
+const t = useTranslations(lang);
+const d = property.data;
+const copy = d[lang];
+
+const badge =
+  d.status === 'sold' ? t('status.sold')
+  : d.status === 'reserved' ? t('status.reserved')
+  : d.featured ? t('status.featured')
+  : null;
+---
+
+<a
+  href="#contact"
+  class:list={['card', { 'card--sold': d.status === 'sold' }]}
+  data-property
+  data-id={property.id}
+  data-area={d.areaKey}
+  data-type={d.type}
+  data-price={d.price}
+>
+  <div class="card__media">
+    <Picture
+      src={d.image}
+      alt={copy.alt}
+      widths={[400, 800]}
+      sizes="(min-width: 1024px) 400px, (min-width: 768px) 45vw, 90vw"
+      formats={['avif', 'webp']}
+      fallbackFormat="jpg"
+      loading={eager ? 'eager' : 'lazy'}
+    />
+    {badge && (
+      <span class:list={['tag', { 'tag--quiet': d.status !== 'available' }]}>{badge}</span>
+    )}
+    <span class="card__price">{formatPrice(d.price, lang)}</span>
+  </div>
+
+  <div class="card__body">
+    <p class="card__loc">
+      <Icon name="pin" size={13} />
+      {copy.area}
+    </p>
+    <h3 class="card__title">{copy.name}</h3>
+    <p class="card__blurb">{copy.blurb}</p>
+    <div class="specs">
+      <span class="spec"><Icon name="bed" size={15} />{d.beds} {t('spec.beds')}</span>
+      <span class="spec"><Icon name="bath" size={15} />{d.baths} {t('spec.baths')}</span>
+      <span class="spec"><Icon name="area" size={15} />{formatArea(d.area, lang)}</span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-stone);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--dur-base) var(--ease-out-soft),
+      box-shadow var(--dur-base) var(--ease-out-soft),
+      border-color var(--dur-base) var(--ease-out-soft);
+  }
+  .card:hover,
+  .card:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--color-line-hi);
+  }
+
+  /* Fixed ratio + object-fit is what keeps CLS at zero across mixed sources. */
+  .card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+  .card__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur-slow) var(--ease-out-soft);
+  }
+  .card:hover .card__media :global(img) { transform: scale(1.05); }
+
+  /* Scrim so the price never rests on raw photography. */
+  .card__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(12 10 9 / 0.62) 0%, rgb(12 10 9 / 0) 45%);
+    pointer-events: none;
+  }
+
+  .tag {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+    color: #fff;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+  }
+  .tag--quiet {
+    background: rgb(12 10 9 / 0.78);
+    color: var(--color-bone);
+    border: 1px solid var(--glass-brd);
+  }
+
+  .card__price {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--color-bone);
+    letter-spacing: -0.01em;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    flex: 1;
+  }
+
+  .card__loc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+  .card__title { margin: 0; font-size: var(--text-xl); }
+  .card__blurb {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.55;
+  }
+
+  .specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .spec { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .spec :global(svg) { color: var(--color-faint); flex: none; }
+
+  .card--sold .card__media :global(img) { filter: grayscale(1); opacity: 0.55; }
+  .card--sold .card__title,
+  .card--sold .card__price { color: var(--color-muted); }
+</style>

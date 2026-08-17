@@ -1,0 +1,169 @@
+---
+import { Picture } from 'astro:assets';
+import { useTranslations, formatPriceShort, formatArea } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+  properties: CollectionEntry<'properties'>[];
+}
+const { lang, properties } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="gallery" data-gallery>
+  <div class="gallery__head shell">
+    <div>
+      <p class="eyebrow">{t('gallery.eyebrow')}</p>
+      <h2 class="gallery__title">{t('gallery.title')}</h2>
+    </div>
+    <div class="progress" aria-hidden="true">
+      <span class="progress__track"><span class="progress__fill" data-gallery-progress></span></span>
+    </div>
+  </div>
+
+  <div class="rail" data-gallery-rail tabindex="0" role="region" aria-label={t('gallery.region')}>
+    <div class="panel panel--intro">
+      <p>{t('gallery.intro')}</p>
+    </div>
+
+    {
+      properties.map((p, i) => {
+        const copy = p.data[lang];
+        return (
+          <a href="#collection" class="panel">
+            <Picture
+              src={p.data.image}
+              alt={copy.alt}
+              widths={[440, 880]}
+              sizes="(min-width: 1024px) 440px, 70vw"
+              formats={['avif', 'webp']}
+              fallbackFormat="jpg"
+              loading="lazy"
+            />
+            <div class="panel__body">
+              <p class="panel__idx">{String(i + 1).padStart(2, '0')}</p>
+              <h3 class="panel__name">{copy.name}</h3>
+              <p class="panel__meta">
+                {copy.area} · {formatArea(p.data.area, lang)} · {formatPriceShort(p.data.price, lang)}
+              </p>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+</section>
+
+<style>
+  /*
+    When pinned, this whole section has to fit inside one viewport — otherwise
+    the bottom of every panel is clipped for the entire scrub. So it is sized
+    against the viewport and its contents are centred within it.
+  */
+  .gallery {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 4rem;
+    overflow: hidden;
+  }
+
+  .gallery__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .gallery__title { margin: 0.75rem 0 0; font-size: var(--text-3xl); }
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+
+  .progress { display: none; }
+  .progress__track {
+    display: block;
+    width: 140px;
+    height: 2px;
+    background: var(--color-line-hi);
+    position: relative;
+  }
+  .progress__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: var(--color-gold-hi);
+  }
+
+  /*
+    Native horizontal scroll with snap points. This IS the no-JS and
+    reduced-motion experience — GSAP only upgrades it to a pinned scrub.
+  */
+  .rail {
+    display: flex;
+    gap: 1.5rem;
+    padding-inline: var(--gutter);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-hi) transparent;
+  }
+
+  /* Height drives the panel; aspect-ratio derives the width. That way the rail
+     always fits the viewport rather than overflowing it vertically. */
+  .panel {
+    position: relative;
+    flex: 0 0 auto;
+    height: clamp(300px, 54vh, 560px);
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-stone);
+  }
+  .panel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur-slow) var(--ease-out-soft);
+  }
+  .panel:hover :global(img) { transform: scale(1.04); }
+  .panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(12 10 9 / 0.9) 0%, rgb(12 10 9 / 0.05) 55%);
+    pointer-events: none;
+  }
+
+  .panel__body { position: absolute; inset: auto 0 0 0; z-index: 1; padding: 1.5rem; }
+  .panel__idx {
+    margin: 0 0 0.5rem;
+    font-size: var(--text-xs);
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--color-gold-hi);
+  }
+  .panel__name { margin: 0; font-size: var(--text-2xl); color: var(--color-bone); }
+  .panel__meta { margin: 0.5rem 0 0; font-size: var(--text-sm); color: var(--color-muted); }
+
+  .panel--intro {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 1.5rem;
+    background: transparent;
+    aspect-ratio: auto;
+    width: clamp(220px, 26vw, 300px);
+  }
+  .panel--intro::after { display: none; }
+  .panel--intro p { margin: 0; font-size: var(--text-base); color: var(--color-muted); }
+
+  @media (min-width: 1024px) {
+    .progress { display: flex; align-items: center; }
+  }
+</style>

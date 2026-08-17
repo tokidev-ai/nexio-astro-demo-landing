@@ -1,0 +1,436 @@
+<!-- @dsCard group="Sections" name="Hero" subtitle="Full-bleed, Ken Burns, split headline — 1440 + 375" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .frame {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+
+  .hero { position: relative; min-height: 640px; display: flex; flex-direction: column; isolation: isolate; }
+  .hero--sm { min-height: 560px; }
+
+  .hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+  .hero__media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    /* Ken Burns: 20s, 1 → 1.08. Paused offscreen and disabled under reduced motion. */
+    animation: kenburns 20s var(--ease-inout) infinite alternate;
+    transform-origin: 55% 60%;
+  }
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+  /* Two-layer scrim: vertical for text, radial to sink the corners. */
+  .hero__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(to top, rgba(12,10,9,0.92) 0%, rgba(12,10,9,0.45) 45%, rgba(12,10,9,0.55) 100%),
+      radial-gradient(120% 80% at 70% 40%, rgba(12,10,9,0) 0%, rgba(12,10,9,0.5) 100%);
+  }
+
+  .hero__nav {
+    display: flex; align-items: center; gap: var(--space-6);
+    padding: var(--space-5) var(--gutter);
+  }
+  .brand { font-family: var(--font-display); font-size: var(--fs-lg); color: var(--bone); text-decoration: none; }
+  .brand span { color: var(--gold-hi); }
+  .navlinks { display: flex; gap: var(--space-5); margin-left: auto; }
+  .navlinks a { font-size: var(--fs-sm); color: var(--bone); opacity: 0.85; text-decoration: none; }
+  .lang { display: inline-flex; border: 1px solid var(--glass-brd); border-radius: var(--r-pill); padding: 2px; background: rgba(12,10,9,0.35); }
+  .lang button { min-width: 38px; min-height: 30px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--muted); font-size: var(--fs-xs); font-weight: var(--fw-semi); }
+  .lang button[aria-pressed="true"] { background: var(--bone); color: var(--ink); }
+
+  .hero__body {
+    margin-top: auto;
+    /* Bottom padding clears the scroll cue so the two never collide. */
+    padding: 0 var(--gutter) var(--space-9);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: var(--space-3);
+    font-size: var(--fs-xs); font-weight: var(--fw-semi);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase;
+    color: var(--bone);
+    margin: 0 0 var(--space-4);
+  }
+  .eyebrow::before { content: ""; width: 40px; height: 1px; background: var(--gold-hi); }
+
+  .display {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    font-weight: var(--fw-medium);
+    color: var(--bone);
+    margin: 0;
+    max-width: 15ch;
+    text-wrap: balance;
+  }
+  .display em { font-style: italic; color: var(--gold-hi); }
+
+  .lead {
+    margin: var(--space-5) 0 0;
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-light);
+    color: var(--bone);
+    opacity: 0.92;
+    max-width: 46ch;
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+    min-height: 52px; padding: 0 var(--space-6);
+    border-radius: var(--r-sm); border: 1px solid transparent;
+    font-size: var(--fs-sm); font-weight: var(--fw-semi); text-decoration: none;
+  }
+  .btn--primary { background: var(--gold); color: var(--gold-ink); }
+  .btn--ghost { border-color: rgba(250,250,249,0.4); color: var(--bone); }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* Featured card tucked into the corner — gives the hero a second read. */
+  .peek {
+    width: 260px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--r-md);
+    padding: var(--space-4);
+    text-decoration: none;
+    display: block;
+  }
+  .peek__label { font-size: var(--fs-xs); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-hi); margin: 0 0 var(--space-3); }
+  .peek__row { display: flex; gap: var(--space-3); align-items: center; }
+  .peek img { width: 64px; height: 64px; object-fit: cover; border-radius: var(--r-sm); flex: none; }
+  .peek__name { font-family: var(--font-display); font-size: var(--fs-base); color: var(--bone); margin: 0; }
+  .peek__meta { font-size: var(--fs-xs); color: var(--muted); margin: var(--space-1) 0 0; }
+
+  .cue {
+    position: absolute; left: 50%; bottom: var(--space-4); transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+    font-size: var(--fs-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  }
+  .cue__line { width: 1px; height: 32px; background: linear-gradient(var(--gold-hi), transparent); }
+
+  /* --- 375px variant --- */
+  .phone { width: 375px; max-width: 100%; }
+  .phone .hero__body { grid-template-columns: 1fr; padding-bottom: var(--space-6); }
+  .phone .cue { display: none; }   /* no room, and touch users need no scroll hint */
+  .phone .display { font-size: 2.5rem; max-width: none; }
+  .phone .lead { font-size: var(--fs-base); }
+  .phone .navlinks, .phone .peek { display: none; }
+  .phone .actions .btn { flex: 1 1 100%; }
+
+  .row { display: flex; gap: var(--space-6); align-items: flex-start; flex-wrap: wrap; }
+  .caption { font-size: var(--fs-xs); color: var(--faint); margin: var(--space-3) 0 0; }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">Hero — 1440</p>
+    <p class="ds-note">
+      Pattern #32, Hero-Centric. The photograph owns the viewport; the headline sits on the lower
+      third where the scrim is densest, so the type never fights the image.
+    </p>
+
+    <div class="frame">
+      <section class="hero">
+        <div class="hero__media">
+          <img src="img/hero-facade.jpg" alt="Stone villa at sunset with a reflecting pool and palm garden">
+        </div>
+        <div class="hero__scrim" aria-hidden="true"></div>
+
+        <nav class="hero__nav" aria-label="Primary">
+          <a href="#" class="brand">NEXIO<span>.</span></a>
+          <div class="navlinks">
+            <a href="#">Residences</a><a href="#">The Office</a><a href="#">Journal</a><a href="#">Contact</a>
+          </div>
+          <div class="lang" role="group" aria-label="Language">
+            <button type="button" aria-pressed="true">ES</button>
+            <button type="button" aria-pressed="false">EN</button>
+          </div>
+        </nav>
+
+        <div class="hero__body">
+          <div>
+            <p class="eyebrow">Private office · Bolivia</p>
+            <h1 class="display">Where architecture becomes <em>legacy</em></h1>
+            <p class="lead">
+              A closed portfolio of eleven residences. Most never reach a public listing.
+            </p>
+            <div class="actions">
+              <a href="#" class="btn btn--primary">
+                Request a private viewing
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#" class="btn btn--ghost">View the collection</a>
+            </div>
+          </div>
+
+          <a href="#" class="peek">
+            <p class="peek__label">Newly listed</p>
+            <div class="peek__row">
+              <img src="img/estate-infinity.jpg" alt="">
+              <div>
+                <p class="peek__name">The Ridgeline House</p>
+                <p class="peek__meta">Samaipata · $6.2M</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="cue" aria-hidden="true">
+          <span>Scroll</span>
+          <span class="cue__line"></span>
+        </div>
+      </section>
+    </div>
+    <p class="caption">Ken Burns 1 → 1.08 over 20s · headline reveals by character on load</p>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Hero — 375</p>
+    <div class="row">
+      <div>
+        <div class="frame phone">
+          <section class="hero hero--sm">
+            <div class="hero__media">
+              <img src="img/hero-facade.jpg" alt="Stone villa at sunset with a reflecting pool">
+            </div>
+            <div class="hero__scrim" aria-hidden="true"></div>
+
+            <nav class="hero__nav" style="padding:var(--space-4)" aria-label="Primary">
+              <a href="#" class="brand" style="font-size:var(--fs-base)">NEXIO<span>.</span></a>
+              <div class="lang" style="margin-left:auto" role="group" aria-label="Language">
+                <button type="button" aria-pressed="true">ES</button>
+                <button type="button" aria-pressed="false">EN</button>
+              </div>
+            </nav>
+
+            <div class="hero__body">
+              <div>
+                <p class="eyebrow">Private office · Bolivia</p>
+                <h1 class="display">Where architecture becomes <em>legacy</em></h1>
+                <p class="lead">Eleven residences. Most never publicly listed.</p>
+                <div class="actions">
+                  <a href="#" class="btn btn--primary">Request a viewing</a>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <p class="caption">375 — nav collapses, peek card drops, CTA goes full width</p>
+      </div>
+
+      <div style="flex:1 1 260px; min-width:240px">
+        <p class="ds-label">What changes</p>
+        <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+          <li>Display drops from fluid-max 95px to a fixed 40px.</li>
+          <li>The peek card is removed rather than shrunk — it would compete with the CTA.</li>
+          <li>Lead copy shortens; it is a separate i18n string, not a truncation.</li>
+          <li>Ken Burns still runs but at reduced amplitude on small screens.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Motion &amp; fallbacks</p>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+      <li><strong>Headline</strong> — SplitText by character, 0.015s stagger,
+          <code>expo.out</code>. Reverted on cleanup so the text node is restored for assistive tech.</li>
+      <li><strong>Parallax</strong> — the media layer moves <code>yPercent: 10</code> on scrub.
+          Applied to the photograph only; never to the headline or the buttons.</li>
+      <li><strong>Reduced motion</strong> — Ken Burns, parallax, and the character reveal are all
+          skipped, and the hero renders at its final state. The scroll cue stops pulsing.</li>
+      <li><strong>No JS</strong> — everything above is decoration on top of static markup. The
+          headline, lead, and both CTAs are in the HTML and fully visible without a single script.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

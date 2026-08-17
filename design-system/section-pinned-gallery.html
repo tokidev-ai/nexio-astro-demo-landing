@@ -1,0 +1,363 @@
+<!-- @dsCard group="Sections" name="Pinned gallery" subtitle="Horizontal scroll-scrub — the wow moment" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pinned gallery — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .stage {
+    border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: var(--space-7) 0 var(--space-6);
+    overflow: hidden;
+  }
+
+  .head { padding: 0 var(--gutter); margin-bottom: var(--space-6); display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-5); flex-wrap: wrap; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: var(--space-3);
+    font-size: var(--fs-xs); font-weight: var(--fw-semi);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-hi);
+    margin: 0 0 var(--space-3);
+  }
+  .eyebrow::before { content: ""; width: 40px; height: 1px; background: var(--gold-hi); }
+  .head h2 { font-family: var(--font-display); font-size: var(--fs-3xl); letter-spacing: var(--ls-display); font-weight: var(--fw-medium); margin: 0; }
+
+  /* Progress — mirrors ScrollTrigger's scrub position */
+  .progress { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-xs); color: var(--faint); }
+  .progress__track { width: 140px; height: 2px; background: var(--border-hi); position: relative; }
+  .progress__fill { position: absolute; inset: 0 auto 0 0; width: 38%; background: var(--gold-hi); }
+
+  /* The rail. In production x is driven by ScrollTrigger scrub, not native overflow. */
+  .rail {
+    display: flex; gap: var(--space-5);
+    padding: 0 var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-hi) transparent;
+    padding-bottom: var(--space-4);
+  }
+  .panel {
+    position: relative; flex: 0 0 clamp(260px, 34vw, 440px);
+    aspect-ratio: 3/4;
+    border-radius: var(--r-md); overflow: hidden;
+    scroll-snap-align: start;
+    text-decoration: none; color: inherit;
+    background: var(--stone);
+  }
+  .panel img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform var(--dur-slow) var(--ease-out); }
+  .panel:hover img { transform: scale(1.04); }
+  .panel::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(12,10,9,0.88) 0%, rgba(12,10,9,0.1) 55%);
+  }
+  .panel__body { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--space-5); z-index: 1; }
+  .panel__idx { font-size: var(--fs-xs); letter-spacing: var(--ls-eyebrow); color: var(--gold-hi); margin: 0 0 var(--space-2); }
+  .panel__name { font-family: var(--font-display); font-size: var(--fs-2xl); line-height: var(--lh-snug); font-weight: var(--fw-medium); margin: 0; color: var(--bone); }
+  .panel__meta { font-size: var(--fs-sm); color: var(--muted); margin: var(--space-2) 0 0; }
+
+  /* Aligned to the panel captions rather than centred, so it reads as a baseline. */
+  .panel--intro { display: flex; align-items: flex-end; background: transparent; aspect-ratio: auto; flex-basis: clamp(240px, 26vw, 320px); padding-bottom: var(--space-5); }
+  .panel--intro::after { display: none; }
+  .panel--intro p { font-size: var(--fs-base); color: var(--muted); margin: 0; }
+
+  .diagram {
+    margin-top: var(--space-5);
+    border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: var(--space-5); background: var(--stone);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: var(--fs-xs); color: var(--muted);
+    line-height: 1.8; overflow-x: auto; white-space: pre;
+  }
+  .diagram b { color: var(--gold-hi); font-weight: var(--fw-semi); }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">Pinned horizontal gallery</p>
+    <p class="ds-note">
+      The signature moment. The section pins to the viewport and vertical scroll is translated into
+      horizontal travel across the collection. Shown here as a native scroll rail so it is reviewable
+      in a static card — drag it sideways.
+    </p>
+
+    <div class="stage">
+      <div class="head">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2>Eleven residences</h2>
+        </div>
+        <div class="progress" aria-hidden="true">
+          <span>03 / 08</span>
+          <span class="progress__track"><span class="progress__fill"></span></span>
+        </div>
+      </div>
+
+      <div class="rail" tabindex="0" role="region" aria-label="Featured residences, scrollable">
+        <div class="panel panel--intro">
+          <p>Each house is represented exclusively, photographed once, and shown in the order it was taken on.</p>
+        </div>
+
+        <a href="#" class="panel">
+          <img src="img/estate-dusk.jpg" alt="Stone villa at dusk with a lit pool">
+          <div class="panel__body">
+            <p class="panel__idx">01</p>
+            <h3 class="panel__name">Casa del Acantilado</h3>
+            <p class="panel__meta">Santa Cruz · 520 m² · $4.85M</p>
+          </div>
+        </a>
+        <a href="#" class="panel">
+          <img src="img/estate-infinity.jpg" alt="Modern villa with a long infinity pool">
+          <div class="panel__body">
+            <p class="panel__idx">02</p>
+            <h3 class="panel__name">The Ridgeline House</h3>
+            <p class="panel__meta">Samaipata · 740 m² · $6.2M</p>
+          </div>
+        </a>
+        <a href="#" class="panel">
+          <img src="img/hero-twilight.jpg" alt="Contemporary villa at blue hour">
+          <div class="panel__body">
+            <p class="panel__idx">03</p>
+            <h3 class="panel__name">Villa Aurelia</h3>
+            <p class="panel__meta">Urubó Hills · 1,120 m² · $9.4M</p>
+          </div>
+        </a>
+        <a href="#" class="panel">
+          <img src="img/int-atrium.jpg" alt="Double-height atrium with a glass wall">
+          <div class="panel__body">
+            <p class="panel__idx">04</p>
+            <h3 class="panel__name">Casa Atrio</h3>
+            <p class="panel__meta">Las Palmas · 690 m² · $5.9M</p>
+          </div>
+        </a>
+        <a href="#" class="panel">
+          <img src="img/estate-courtyard.jpg" alt="Villa courtyard at night">
+          <div class="panel__body">
+            <p class="panel__idx">05</p>
+            <h3 class="panel__name">Patio Verde</h3>
+            <p class="panel__meta">Urubó Hills · 610 m² · $5.3M</p>
+          </div>
+        </a>
+        <a href="#" class="panel">
+          <img src="img/estate-oceanfront.jpg" alt="Oceanfront villa terrace">
+          <div class="panel__body">
+            <p class="panel__idx">06</p>
+            <h3 class="panel__name">Casa Miralago</h3>
+            <p class="panel__meta">Lake Tarija · 310 m² · $3.1M</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">How the pin works</p>
+    <div class="diagram">
+scroll ──────────────────────────────────────────────────────────▶
+
+   <b>│ enter │</b>          <b>│ pinned — end: "+=200%" │</b>          <b>│ release │</b>
+   ├───────┼──────────────────────────────────────────────┼─────────┤
+             rail x:  0% ────────── scrub 1 ────────▶ −66%
+             progress fill grows in lockstep with x
+    </div>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9; margin-top:var(--space-5)">
+      <li><code>scrub: 1</code> — tied to the scrollbar with a 1s catch-up so it feels weighted
+          rather than snapped.</li>
+      <li>This is the <strong>only</strong> pinned section on the page. Two would fight native
+          scroll feel; the skill caps it at 1–2 and mobile punishes more.</li>
+      <li><code>ScrollTrigger.refresh()</code> fires after fonts and images settle, or the pin
+          length is computed against the wrong height.</li>
+      <li>The rail is a focusable <code>region</code> with a label, so keyboard users can arrow
+          through it without a drag gesture.</li>
+    </ul>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Degradation</p>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+      <li><strong>Reduced motion</strong> — no pin, no scrub. The section becomes exactly what you
+          see above: a natively scrollable rail with snap points. Every panel stays reachable.</li>
+      <li><strong>No JS</strong> — identical to the reduced-motion state. The markup is a plain
+          overflow container; GSAP only ever <em>upgrades</em> it.</li>
+      <li><strong>Below 768px</strong> — the pin is dropped entirely. Vertical-scroll hijacking on a
+          phone is the single fastest way to make a site feel broken.</li>
+      <li>Panels stay in DOM order, so reading order and tab order match the visual sequence.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

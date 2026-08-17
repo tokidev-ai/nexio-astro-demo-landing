@@ -1,0 +1,21 @@
+{
+  "order": 6,
+  "price": 4100000,
+  "beds": 3, "baths": 4, "area": 440,
+  "type": "house", "status": "available", "featured": false,
+  "areaKey": "samaipata",
+  "coords": { "lng": -63.8590, "lat": -18.1682 },
+  "image": "../../assets/properties/estate-bodrum.jpg",
+  "es": {
+    "name": "Casa Piedra",
+    "area": "Samaipata Ridge",
+    "blurb": "Muros de mampostería seca levantados por la misma cuadrilla durante dos años.",
+    "alt": "Villa con fachada de piedra y jardín en terrazas"
+  },
+  "en": {
+    "name": "Casa Piedra",
+    "area": "Samaipata Ridge",
+    "blurb": "Dry-stone walls raised by the same crew over two years.",
+    "alt": "Stone-faced villa with a terraced garden"
+  }
+}

@@ -1,0 +1,428 @@
+<!-- @dsCard group="Sections" name="Property grid" subtitle="Filter bar + 3-up listing grid, empty state" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Property grid — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .section { padding: var(--space-8) var(--gutter); border: 1px solid var(--border); border-radius: var(--r-md); }
+
+  .head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: var(--space-6); flex-wrap: wrap;
+    margin-bottom: var(--space-6);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: var(--space-3);
+    font-size: var(--fs-xs); font-weight: var(--fw-semi);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--gold-hi);
+    margin: 0 0 var(--space-3);
+  }
+  .eyebrow::before { content: ""; width: 40px; height: 1px; background: var(--gold-hi); }
+  .head h2 {
+    font-family: var(--font-display); font-size: var(--fs-3xl);
+    line-height: var(--lh-snug); letter-spacing: var(--ls-display);
+    font-weight: var(--fw-medium); margin: 0; max-width: 18ch;
+  }
+  .head p { margin: 0; font-size: var(--fs-sm); color: var(--muted); max-width: 40ch; }
+
+  /* Filter bar — same component as ui-filter-bar, in situ */
+  .bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--r-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    margin-bottom: var(--space-6);
+  }
+  .field { flex: 1 1 150px; }
+  .field label { display: block; font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding: 0 var(--space-3) 2px; }
+  .control {
+    width: 100%; min-height: 44px;
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+    background: transparent; border: 0; color: var(--bone);
+    font-family: var(--font-body); font-size: var(--fs-sm); font-weight: var(--fw-medium);
+    padding: 0 var(--space-3); border-radius: var(--r-sm); text-align: left;
+  }
+  .control:hover { background: rgba(250,250,249,0.06); }
+  .control svg { width: 15px; height: 15px; color: var(--muted); }
+  .divider { width: 1px; align-self: stretch; background: var(--glass-brd); margin: var(--space-2) 0; }
+  .submit {
+    min-height: 44px; padding: 0 var(--space-5);
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    background: var(--gold); color: var(--gold-ink); border: 0; border-radius: var(--r-sm);
+    font-family: var(--font-body); font-size: var(--fs-sm); font-weight: var(--fw-semi);
+  }
+  .submit svg { width: 16px; height: 16px; }
+
+  .count { font-size: var(--fs-sm); color: var(--muted); margin: 0 0 var(--space-5); }
+  .count b { color: var(--bone); font-weight: var(--fw-semi); }
+
+  .grid { display: grid; gap: var(--space-5); grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 1023px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 767px)  { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--stone); border: 1px solid var(--border);
+    border-radius: var(--r-md); overflow: hidden;
+    text-decoration: none; color: inherit;
+    transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+  }
+  .card:hover, .card.is-hover { transform: translateY(-4px); box-shadow: var(--shadow-3); border-color: var(--border-hi); }
+  .card__media { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+  .card__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform var(--dur-slow) var(--ease-out); }
+  .card:hover .card__media img, .card.is-hover .card__media img { transform: scale(1.05); }
+  .card__media::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(12,10,9,0.55) 0%, rgba(12,10,9,0) 42%);
+  }
+  .tag {
+    position: absolute; top: var(--space-3); left: var(--space-3); z-index: 1;
+    font-size: var(--fs-xs); font-weight: var(--fw-semi);
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase;
+    padding: var(--space-1) var(--space-3); border-radius: var(--r-pill);
+    background: var(--gold); color: var(--gold-ink);
+  }
+  .card__price {
+    position: absolute; bottom: var(--space-3); left: var(--space-3); z-index: 1;
+    font-family: var(--font-display); font-size: var(--fs-xl); color: var(--bone);
+  }
+  .card__body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
+  .card__loc { display: flex; align-items: center; gap: var(--space-2); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin: 0; }
+  .card__loc svg { width: 13px; height: 13px; }
+  .card__title { font-family: var(--font-display); font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: var(--fw-medium); margin: 0; }
+  .specs { display: flex; gap: var(--space-4); flex-wrap: wrap; margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border); font-size: var(--fs-sm); color: var(--muted); }
+  .spec { display: inline-flex; align-items: center; gap: var(--space-2); }
+  .spec svg { width: 15px; height: 15px; color: var(--faint); }
+
+  .more { display: flex; justify-content: center; margin-top: var(--space-7); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 52px; padding: 0 var(--space-6);
+    border: 1px solid var(--border-hi); border-radius: var(--r-sm);
+    color: var(--bone); text-decoration: none; font-size: var(--fs-sm); font-weight: var(--fw-semi);
+  }
+  .btn-ghost:hover { border-color: var(--bone); }
+
+  .empty {
+    text-align: center; padding: var(--space-9) var(--space-5);
+    border: 1px dashed var(--border-hi); border-radius: var(--r-md);
+  }
+  .empty h3 { font-family: var(--font-display); font-size: var(--fs-2xl); margin: 0 0 var(--space-3); font-weight: var(--fw-medium); }
+  .empty p { color: var(--muted); font-size: var(--fs-sm); margin: 0 0 var(--space-5); }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">Property grid</p>
+    <p class="ds-note">
+      Filter bar pinned above a 3-up grid. Cards re-stagger in place when filters change — the page
+      never navigates.
+    </p>
+
+    <div class="section">
+      <div class="head">
+        <div>
+          <p class="eyebrow">The collection</p>
+          <h2>Eleven residences, quietly held</h2>
+        </div>
+        <p>Each property is represented exclusively. Six are shown publicly; the remainder are released on request.</p>
+      </div>
+
+      <form class="bar" role="search">
+        <div class="field">
+          <label for="g-loc">Location</label>
+          <button type="button" class="control" id="g-loc" aria-expanded="false">
+            Urubó Hills
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="divider" aria-hidden="true"></div>
+        <div class="field">
+          <label for="g-type">Type</label>
+          <button type="button" class="control" id="g-type" aria-expanded="false">
+            All residences
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="divider" aria-hidden="true"></div>
+        <div class="field">
+          <label for="g-price">Price</label>
+          <button type="button" class="control" id="g-price" aria-expanded="false">
+            $4M – $8M
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+        <button type="submit" class="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          Search
+        </button>
+      </form>
+
+      <p class="count" role="status"><b>6</b> residences match your criteria</p>
+
+      <div class="grid">
+        <a href="#" class="card">
+          <div class="card__media"><img src="img/hero-twilight.jpg" alt="Contemporary villa at blue hour with a lit pool"><span class="tag">Featured</span><span class="card__price">$9,400,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Urubó Hills</p>
+            <h3 class="card__title">Villa Aurelia</h3>
+            <div class="specs"><span class="spec">6 bed</span><span class="spec">7 bath</span><span class="spec">1,120 m²</span></div>
+          </div>
+        </a>
+        <a href="#" class="card is-hover">
+          <div class="card__media"><img src="img/estate-infinity.jpg" alt="Modern villa with a long infinity pool"><span class="card__price">$6,200,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Samaipata Ridge</p>
+            <h3 class="card__title">The Ridgeline House</h3>
+            <div class="specs"><span class="spec">5 bed</span><span class="spec">6 bath</span><span class="spec">740 m²</span></div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media"><img src="img/estate-dusk.jpg" alt="Stone villa at dusk beside a lit pool"><span class="card__price">$4,850,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Santa Cruz</p>
+            <h3 class="card__title">Casa del Acantilado</h3>
+            <div class="specs"><span class="spec">4 bed</span><span class="spec">5 bath</span><span class="spec">520 m²</span></div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media"><img src="img/estate-courtyard.jpg" alt="Villa courtyard with warm evening lighting"><span class="card__price">$5,300,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Urubó Hills</p>
+            <h3 class="card__title">Patio Verde</h3>
+            <div class="specs"><span class="spec">4 bed</span><span class="spec">4 bath</span><span class="spec">610 m²</span></div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media"><img src="img/estate-dubai.jpg" alt="Wide modern villa with a lap pool and palms"><span class="card__price">$7,750,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Las Palmas</p>
+            <h3 class="card__title">Casa Lineal</h3>
+            <div class="specs"><span class="spec">5 bed</span><span class="spec">6 bath</span><span class="spec">880 m²</span></div>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media"><img src="img/estate-bodrum.jpg" alt="Stone-faced villa with terraced garden"><span class="card__price">$4,100,000</span></div>
+          <div class="card__body">
+            <p class="card__loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>Samaipata Ridge</p>
+            <h3 class="card__title">Casa Piedra</h3>
+            <div class="specs"><span class="spec">3 bed</span><span class="spec">4 bath</span><span class="spec">440 m²</span></div>
+          </div>
+        </a>
+      </div>
+
+      <div class="more">
+        <a href="#" class="btn-ghost">
+          Request the private list
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Empty state</p>
+    <p class="ds-note">
+      Filters can always be over-narrowed. The empty state offers the way out rather than just
+      reporting the dead end.
+    </p>
+    <div class="empty">
+      <h3>No residences at that price in Samaipata</h3>
+      <p>The nearest match is $4.1M in Urubó Hills, or we can widen the range.</p>
+      <a href="#" class="btn-ghost">Clear filters</a>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Behaviour</p>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+      <li>3-up ≥1024px, 2-up ≥768px, 1-up below. Card min-width 280px so nothing ever crushes.</li>
+      <li>Entrance stagger is <code>0.06s</code> with <code>grid: 'auto'</code>, capped at 8 items —
+          beyond that the last cards feel laggy.</li>
+      <li>Filtering re-runs the stagger on the surviving cards only. Removed cards fade, they do
+          not collapse-animate, which would thrash layout.</li>
+      <li>The count lives in <code>role="status"</code>, so the change is announced without stealing focus.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

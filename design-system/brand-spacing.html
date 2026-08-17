@@ -1,0 +1,307 @@
+<!-- @dsCard group="Brand" name="Spacing & grid" subtitle="4/8 rhythm, 12-col, four breakpoints" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spacing &amp; grid — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .scale { display: grid; gap: var(--space-2); }
+  .step { display: grid; grid-template-columns: 96px 64px 1fr; gap: var(--space-4); align-items: center; }
+  .step__name {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: var(--fs-xs); color: var(--muted);
+  }
+  .step__px { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: var(--fs-xs); color: var(--faint); text-align: right; }
+  .step__bar { height: 14px; background: var(--gold); border-radius: var(--r-sm); }
+
+  .grid-demo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--stone);
+  }
+  .col {
+    height: 56px;
+    background: rgba(161,98,7,0.22);
+    border: 1px solid rgba(161,98,7,0.5);
+    border-radius: var(--r-sm);
+    display: grid; place-items: center;
+    font-size: var(--fs-xs); color: var(--muted);
+  }
+  .spans { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+  .span-row { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-4); }
+  .span {
+    background: var(--stone-2);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    padding: var(--space-3);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .bps { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+  .bp {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: var(--space-4);
+    background: var(--stone);
+  }
+  .bp b { display: block; font-family: ui-monospace, Menlo, monospace; color: var(--gold-hi); font-size: var(--fs-sm); }
+  .bp span { display: block; font-size: var(--fs-xs); color: var(--muted); margin-top: var(--space-2); }
+
+  .rhythm { border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+  .rhythm > div { padding: var(--space-4) var(--space-5); border-bottom: 1px dashed var(--border-hi); }
+  .rhythm > div:last-child { border-bottom: 0; }
+  .rhythm em { font-style: normal; color: var(--faint); font-size: var(--fs-xs); font-family: ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">Spacing scale</p>
+    <p class="ds-note">
+      Strict 4/8 rhythm. Every gap, pad, and margin in the product resolves to one of these ten
+      values — no arbitrary numbers.
+    </p>
+    <div class="scale">
+      <div class="step"><span class="step__name">--space-1</span><span class="step__px">4px</span><div class="step__bar" style="width:4px"></div></div>
+      <div class="step"><span class="step__name">--space-2</span><span class="step__px">8px</span><div class="step__bar" style="width:8px"></div></div>
+      <div class="step"><span class="step__name">--space-3</span><span class="step__px">12px</span><div class="step__bar" style="width:12px"></div></div>
+      <div class="step"><span class="step__name">--space-4</span><span class="step__px">16px</span><div class="step__bar" style="width:16px"></div></div>
+      <div class="step"><span class="step__name">--space-5</span><span class="step__px">24px</span><div class="step__bar" style="width:24px"></div></div>
+      <div class="step"><span class="step__name">--space-6</span><span class="step__px">32px</span><div class="step__bar" style="width:32px"></div></div>
+      <div class="step"><span class="step__name">--space-7</span><span class="step__px">48px</span><div class="step__bar" style="width:48px"></div></div>
+      <div class="step"><span class="step__name">--space-8</span><span class="step__px">64px</span><div class="step__bar" style="width:64px"></div></div>
+      <div class="step"><span class="step__name">--space-9</span><span class="step__px">96px</span><div class="step__bar" style="width:96px"></div></div>
+      <div class="step"><span class="step__name">--space-10</span><span class="step__px">128px</span><div class="step__bar" style="width:128px"></div></div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Grid — 12 column</p>
+    <p class="ds-note">
+      Content max 1280px. Gutter is fluid: <code>clamp(1rem, 0.5rem + 3vw, 3rem)</code> — 16px on a
+      375px phone, 48px on desktop, per the skill's adaptive-gutter rule.
+    </p>
+    <div class="grid-demo">
+      <div class="col">1</div><div class="col">2</div><div class="col">3</div><div class="col">4</div>
+      <div class="col">5</div><div class="col">6</div><div class="col">7</div><div class="col">8</div>
+      <div class="col">9</div><div class="col">10</div><div class="col">11</div><div class="col">12</div>
+    </div>
+    <div class="spans">
+      <div class="span-row">
+        <div class="span" style="grid-column:span 4">Property card · span 4</div>
+        <div class="span" style="grid-column:span 4">span 4</div>
+        <div class="span" style="grid-column:span 4">span 4</div>
+      </div>
+      <div class="span-row">
+        <div class="span" style="grid-column:span 7">Story copy · span 7</div>
+        <div class="span" style="grid-column:span 5">Figure · span 5</div>
+      </div>
+      <div class="span-row">
+        <div class="span" style="grid-column:span 12">Full-bleed section · span 12</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Breakpoints</p>
+    <div class="bps">
+      <div class="bp"><b>375px</b><span>Small phone. 1-col cards, 16px gutter, nav collapses.</span></div>
+      <div class="bp"><b>768px</b><span>Tablet. 2-col cards, 24px gutter.</span></div>
+      <div class="bp"><b>1024px</b><span>Laptop. 3-col cards, split-screen story unlocks.</span></div>
+      <div class="bp"><b>1440px</b><span>Desktop. 48px gutter, content caps at 1280px.</span></div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Vertical rhythm</p>
+    <p class="ds-note">Four hierarchy tiers, so sibling elements never disagree about their spacing.</p>
+    <div class="rhythm">
+      <div><em>--space-2 · 8px</em> — label to its field</div>
+      <div><em>--space-4 · 16px</em> — inside a card, between stacked text</div>
+      <div><em>--space-6 · 32px</em> — between component groups</div>
+      <div><em>--section-y · clamp(64→128px)</em> — between page sections</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

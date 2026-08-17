@@ -1,0 +1,153 @@
+---
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+/**
+ * Short quote + a face + one checkable number. No carousel: three cards fit,
+ * so auto-rotation would add pause controls, live-region announcements and
+ * focus handling for nothing.
+ */
+const quotes = [
+  {
+    initials: 'MR',
+    name: 'María Rojas',
+    es: {
+      quote: 'Encontraron la casa del Urubó antes de que saliera a la venta.',
+      metric: 'Cerrado en <b>19 días</b>, 4% bajo el precio pedido',
+      role: 'Compradora · Urubó Hills',
+    },
+    en: {
+      quote: 'They found the Urubó house before it ever reached a listing.',
+      metric: 'Closed in <b>19 days</b>, 4% under ask',
+      role: 'Buyer · Urubó Hills',
+    },
+  },
+  {
+    initials: 'DA',
+    name: 'Diego Antelo',
+    es: {
+      quote: 'Tres ofertas en la primera semana, todas sobre el precio guía.',
+      metric: 'Vendida al <b>106% del pedido</b>',
+      role: 'Vendedor · Samaipata Ridge',
+    },
+    en: {
+      quote: 'Three offers in the first week, all above the guide price.',
+      metric: 'Sold at <b>106% of ask</b>',
+      role: 'Seller · Samaipata Ridge',
+    },
+  },
+  {
+    initials: 'CF',
+    name: 'Carolina Ferreira',
+    es: {
+      quote: 'La única oficina que me dijo que no comprara algo.',
+      metric: 'Cliente desde <b>2016</b>, cuatro operaciones',
+      role: 'Cliente privada · São Paulo',
+    },
+    en: {
+      quote: 'The only office that told me not to buy something.',
+      metric: 'Client since <b>2016</b>, four transactions',
+      role: 'Private client · São Paulo',
+    },
+  },
+];
+---
+
+<section class="praise">
+  <div class="shell">
+    <div class="head" data-reveal>
+      <p class="eyebrow">{t('praise.eyebrow')}</p>
+      <h2 class="head__title">{t('praise.title')}</h2>
+    </div>
+
+    <div class="grid" data-stagger>
+      {
+        quotes.map((q) => {
+          const copy = q[lang];
+          return (
+            <figure class="quote" data-reveal>
+              <span class="quote__mark" aria-hidden="true">&ldquo;</span>
+              <blockquote>{copy.quote}</blockquote>
+              <p class="quote__metric" set:html={copy.metric} />
+              <figcaption class="who">
+                <span class="who__face" aria-hidden="true">{q.initials}</span>
+                <span>
+                  <span class="who__name">{q.name}</span>
+                  <span class="who__role">{copy.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .praise { padding-block: var(--section-y); }
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+  .head { margin-bottom: 2rem; }
+  .head__title { margin: 0.75rem 0 0; font-size: var(--text-3xl); }
+
+  .grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+
+  .quote {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 2rem;
+    background: var(--color-stone);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+  }
+  .quote__mark {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    line-height: 0.7;
+    color: var(--color-gold);
+    margin-bottom: 0.75rem;
+  }
+  .quote blockquote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    line-height: 1.45;
+    color: var(--color-bone);
+  }
+  .quote__metric { margin: 1rem 0 0; font-size: var(--text-sm); color: var(--color-muted); }
+  .quote__metric :global(b) { color: var(--color-gold-hi); font-weight: 600; }
+
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+  }
+  .who__face {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--color-line-hi);
+    background: var(--color-stone-2);
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    color: var(--color-gold-hi);
+  }
+  .who__name { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--color-bone); }
+  .who__role { display: block; font-size: var(--text-xs); color: var(--color-faint); }
+
+  @media (min-width: 768px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

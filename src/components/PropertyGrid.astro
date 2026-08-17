@@ -1,0 +1,239 @@
+---
+import Icon from './Icon.astro';
+import PropertyCard from './PropertyCard.astro';
+import { useTranslations, formatPriceShort } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+  properties: CollectionEntry<'properties'>[];
+}
+const { lang, properties } = Astro.props;
+const t = useTranslations(lang);
+
+// Areas are derived from content, so adding a property never desyncs the filter.
+const areas = [...new Map(properties.map((p) => [p.data.areaKey, p.data[lang].area])).entries()];
+const types = [...new Set(properties.map((p) => p.data.type))];
+
+const priceBands = [
+  { id: '0-4', label: `< ${formatPriceShort(4_000_000, lang)}` },
+  { id: '4-6', label: `${formatPriceShort(4_000_000, lang)} – ${formatPriceShort(6_000_000, lang)}` },
+  { id: '6-8', label: `${formatPriceShort(6_000_000, lang)} – ${formatPriceShort(8_000_000, lang)}` },
+  { id: '8-', label: `${formatPriceShort(8_000_000, lang)}+` },
+];
+---
+
+<section class="collection" id="collection">
+  <div class="shell">
+    <div class="head" data-reveal>
+      <div>
+        <p class="eyebrow">{t('grid.eyebrow')}</p>
+        <h2 class="head__title">{t('grid.title')}</h2>
+      </div>
+      <p class="head__lead">{t('grid.lead')}</p>
+    </div>
+
+    {/*
+      Native <select> rather than the custom listbox in the design system.
+      Native gives correct keyboard behaviour, typeahead, and the OS picker on
+      mobile for free; only the opened dropdown looks system-native. The closed
+      state matches the design system exactly.
+    */}
+    <form class="bar" data-filters role="search" aria-label={t('grid.title')}>
+      <div class="field">
+        <label for="f-area">{t('grid.filter.location')}</label>
+        <div class="control">
+          <select id="f-area" name="area" data-filter="area">
+            <option value="">{t('grid.filter.any')}</option>
+            {areas.map(([key, label]) => <option value={key}>{label}</option>)}
+          </select>
+          <Icon name="chevron-down" size={15} />
+        </div>
+      </div>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <div class="field">
+        <label for="f-type">{t('grid.filter.type')}</label>
+        <div class="control">
+          <select id="f-type" name="type" data-filter="type">
+            <option value="">{t('grid.filter.allTypes')}</option>
+            {types.map((ty) => <option value={ty}>{t(`type.${ty}` as 'type.villa')}</option>)}
+          </select>
+          <Icon name="chevron-down" size={15} />
+        </div>
+      </div>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <div class="field">
+        <label for="f-price">{t('grid.filter.price')}</label>
+        <div class="control">
+          <select id="f-price" name="price" data-filter="price">
+            <option value="">{t('grid.filter.anyPrice')}</option>
+            {priceBands.map((b) => <option value={b.id}>{b.label}</option>)}
+          </select>
+          <Icon name="chevron-down" size={15} />
+        </div>
+      </div>
+
+      <button type="submit" class="submit">
+        <Icon name="search" />
+        {t('grid.search')}
+      </button>
+    </form>
+
+    <p class="count" role="status" data-count
+      data-one={t('grid.count.one')}
+      data-other={t('grid.count.other')}
+    >
+      <b>{properties.length}</b> {properties.length === 1 ? t('grid.count.one') : t('grid.count.other')}
+    </p>
+
+    <div class="grid" data-grid>
+      {properties.map((p, i) => <PropertyCard lang={lang} property={p} eager={i < 3} />)}
+    </div>
+
+    <div class="empty" data-empty hidden>
+      <h3>{t('grid.empty.title')}</h3>
+      <p>{t('grid.empty.lead')}</p>
+      <button type="button" class="btn-ghost" data-clear>{t('grid.empty.cta')}</button>
+    </div>
+
+    <div class="more">
+      <a href="#contact" class="btn-ghost">
+        {t('grid.cta')}
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection { padding-block: var(--section-y); scroll-margin-top: 5rem; }
+
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+  .head__title { margin: 0.75rem 0 0; font-size: var(--text-3xl); max-width: 18ch; }
+  .head__lead { margin: 0; font-size: var(--text-sm); color: var(--color-muted); max-width: 40ch; }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    margin-bottom: 1.5rem;
+  }
+  .field { flex: 1 1 150px; min-width: 140px; }
+  .field label {
+    display: block;
+    padding: 0 0.75rem 2px;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+  .control { position: relative; display: flex; align-items: center; }
+  .control select {
+    appearance: none;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 2rem 0 0.75rem;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: var(--color-bone);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: background-color var(--dur-base) var(--ease-out-soft);
+  }
+  .control select:hover { background: rgb(250 250 249 / 0.06); }
+  /* The OS renders option lists on its own surface — force a legible one. */
+  .control select option { background: var(--color-stone); color: var(--color-bone); }
+  .control :global(svg) {
+    position: absolute;
+    right: 0.5rem;
+    color: var(--color-muted);
+    pointer-events: none;
+  }
+
+  .divider { width: 1px; align-self: stretch; margin-block: 0.5rem; background: var(--glass-brd); }
+
+  .submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding-inline: 1.5rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-gold);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    transition: background-color var(--dur-base) var(--ease-out-soft);
+  }
+  .submit:hover { background: var(--color-gold-hi); }
+
+  .count { margin: 0 0 1.5rem; font-size: var(--text-sm); color: var(--color-muted); }
+  .count b { color: var(--color-bone); font-weight: 600; }
+
+  .grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+
+  .empty {
+    text-align: center;
+    padding: 4rem 1.5rem;
+    border: 1px dashed var(--color-line-hi);
+    border-radius: var(--radius-md);
+  }
+  .empty[hidden] { display: none; }
+  .empty h3 { margin: 0 0 0.75rem; font-size: var(--text-2xl); }
+  .empty p { margin: 0 0 1.5rem; font-size: var(--text-sm); color: var(--color-muted); }
+
+  .more { display: flex; justify-content: center; margin-top: 3rem; }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding-inline: 1.5rem;
+    border: 1px solid var(--color-line-hi);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-bone);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color var(--dur-base) var(--ease-out-soft);
+  }
+  .btn-ghost:hover { border-color: var(--color-bone); }
+
+  @media (min-width: 768px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+
+<script>
+  import { filterGrid } from '../scripts/filters';
+  filterGrid();
+</script>

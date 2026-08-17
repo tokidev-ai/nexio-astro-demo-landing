@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import TrustStrip from './TrustStrip.astro';
+import PinnedGallery from './PinnedGallery.astro';
+import PropertyGrid from './PropertyGrid.astro';
+import VirtualTour from './VirtualTour.astro';
+import PropertyMap from './PropertyMap.astro';
+import StorySplit from './StorySplit.astro';
+import Testimonials from './Testimonials.astro';
+import ContactCTA from './ContactCTA.astro';
+import Footer from './Footer.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const properties = (await getCollection('properties')).sort((a, b) => a.data.order - b.data.order);
+const peek = properties.find((p) => p.data.featured) ?? properties[0];
+// The gallery shows the six strongest; the grid shows everything.
+const gallery = properties.filter((p) => p.data.status !== 'sold').slice(0, 6);
+---
+
+<Nav lang={lang} />
+
+<main id="main">
+  <Hero lang={lang} peek={peek} />
+  <TrustStrip lang={lang} />
+  <PinnedGallery lang={lang} properties={gallery} />
+  <PropertyGrid lang={lang} properties={properties} />
+  <VirtualTour lang={lang} />
+  <PropertyMap lang={lang} properties={properties} />
+  <StorySplit lang={lang} />
+  <Testimonials lang={lang} />
+  <ContactCTA lang={lang} properties={properties} />
+</main>
+
+<Footer lang={lang} />
+
+<script>
+  import { initMotion, initSmoothScroll } from '../scripts/motion';
+  initMotion();
+  void initSmoothScroll();
+</script>

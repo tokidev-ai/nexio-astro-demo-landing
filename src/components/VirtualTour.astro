@@ -1,0 +1,152 @@
+---
+import { Picture } from 'astro:assets';
+import tourImage from '../assets/properties/int-atrium.jpg';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Hotspots are positioned in percentages so they track the image at any size.
+const hotspots = [
+  { x: 28, y: 38, es: 'Atrio de doble altura', en: 'Double-height atrium' },
+  { x: 63, y: 30, es: 'Muro de vidrio al sur', en: 'South glass wall' },
+  { x: 47, y: 72, es: 'Piso de piedra caliza', en: 'Limestone floor' },
+];
+---
+
+<section class="tour" data-tour>
+  <div class="tour__intro shell" data-reveal>
+    <p class="eyebrow">{t('tour.eyebrow')}</p>
+    <h2 class="tour__title">{t('tour.title')}</h2>
+    <p class="tour__lead">{t('tour.lead')}</p>
+  </div>
+
+  <div class="tour__track" data-tour-track>
+    <div class="tour__stage">
+      <div class="tour__frame" data-tour-frame>
+        <Picture
+          src={tourImage}
+          alt={lang === 'es'
+            ? 'Atrio de doble altura con muro de vidrio hacia la piscina'
+            : 'Double-height atrium with a full-height glass wall onto the pool'}
+          widths={[768, 1280, 1920]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          loading="lazy"
+        />
+        {
+          hotspots.map((h, i) => (
+            <span
+              class="hotspot"
+              style={`left:${h.x}%; top:${h.y}%`}
+              data-hotspot
+              data-index={i}
+            >
+              <span class="hotspot__dot" aria-hidden="true"></span>
+              <span class="hotspot__label">{lang === 'es' ? h.es : h.en}</span>
+            </span>
+          ))
+        }
+      </div>
+      <p class="tour__hint" aria-hidden="true">{t('tour.hint')}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tour { padding-block: var(--section-y) 0; }
+
+  .tour__intro { max-width: 56ch; }
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+  .tour__title { margin: 0.75rem 0 0; font-size: var(--text-3xl); }
+  .tour__lead { margin: 1rem 0 0; font-size: var(--text-base); color: var(--color-muted); }
+
+  /*
+    The track is taller than the viewport; the stage sticks while it scrolls
+    past, which is what gives the zoom something to scrub against. `position:
+    sticky` means this works with zero JS — GSAP only drives the scale.
+  */
+  .tour__track { margin-top: 3rem; height: 220vh; position: relative; }
+  .tour__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .tour__frame { position: relative; width: 100%; height: 78%; overflow: hidden; }
+  .tour__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform-origin: 50% 45%;
+  }
+
+  .hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-out-soft);
+  }
+  .hotspot.is-on { opacity: 1; }
+  /* With no JS the reveal never fires, so show them outright. */
+  html:not(.js) .hotspot { opacity: 1; }
+
+  .hotspot__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-gold-hi);
+    box-shadow: 0 0 0 6px rgb(202 138 4 / 0.25);
+    flex: none;
+  }
+  .hotspot__label {
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    background: rgb(12 10 9 / 0.78);
+    border: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-size: var(--text-xs);
+    color: var(--color-bone);
+    white-space: nowrap;
+  }
+
+  .tour__hint {
+    margin: 1.5rem auto 0;
+    font-size: var(--text-xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* No scrub to hang the reveal on — show the final state. */
+    .hotspot { opacity: 1; }
+    .tour__track { height: auto; }
+    .tour__stage { position: static; height: auto; }
+    .tour__frame { height: 60svh; }
+    .tour__hint { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    /* Vertical-scroll hijacking on a phone is the fastest way to feel broken. */
+    .tour__track { height: auto; }
+    .tour__stage { position: static; height: auto; }
+    .tour__frame { height: 60svh; }
+    .tour__hint { display: none; }
+    .hotspot { opacity: 1; }
+  }
+</style>

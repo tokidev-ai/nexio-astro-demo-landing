@@ -1,0 +1,321 @@
+<!-- @dsCard group="Brand" name="Type scale" subtitle="Playfair Display × Inter, 8 steps" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Type scale — Nexio Estates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* tokens:start */
+/* ==========================================================================
+   NEXIO ESTATES — Design Tokens
+   Single source of truth. Injected into every preview by build.mjs.
+   Derived from ui-ux-pro-max: colors.csv row 4 (E-commerce Luxury),
+   typography.csv row 1 (Classic Elegant).
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Contrast measured against --ink unless noted. */
+  --ink:            #0C0A09;  /* page ground                                */
+  --stone:          #1C1917;  /* raised surface                             */
+  --stone-2:        #292524;  /* surface hover / inset                      */
+  --bone:           #FAFAF9;  /* primary text        18.9:1  AAA            */
+  --muted:          #A8A29E;  /* secondary text       7.8:1  AAA (6.9 stone)*/
+  --faint:          #78716C;  /* tertiary / meta      4.1:1  large text only*/
+  --gold:           #A16207;  /* accent, CTA fill (4.0:1 as text — see note)*/
+  --gold-hi:        #CA8A04;  /* accent hover / focus ring   6.7:1  AA      */
+  --gold-ink:       #FFFFFF;  /* text on gold fill    4.9:1  AA             */
+  --border:         #292524;
+  --border-hi:      #44403C;
+
+  /* Glass — used ONLY on nav + filter bar */
+  --glass-bg:       rgba(28, 25, 23, 0.72);
+  --glass-brd:      rgba(250, 250, 249, 0.10);
+  --glass-blur:     16px;
+
+  /* Status */
+  --danger:         #DC2626;
+  --on-danger:      #FFFFFF;
+
+  /* --- Typography --------------------------------------------------------
+     Playfair Display (display) / Inter (body). Scale ratio 1.25. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs:      0.75rem;    /* 12px  meta, eyebrow            */
+  --fs-sm:      0.875rem;   /* 14px  captions, labels         */
+  --fs-base:    1rem;       /* 16px  body                     */
+  --fs-lg:      1.25rem;    /* 20px  lead paragraph           */
+  --fs-xl:      1.5625rem;  /* 25px  card title               */
+  --fs-2xl:     1.953rem;   /* 31px  section subhead          */
+  --fs-3xl:     2.441rem;   /* 39px  section head             */
+  --fs-4xl:     3.052rem;   /* 49px  page head                */
+  --fs-display: clamp(2.75rem, 1.2rem + 6.2vw, 5.96rem); /* hero */
+
+  --lh-tight:   1.05;   /* display                            */
+  --lh-snug:    1.25;   /* headings                           */
+  --lh-normal:  1.6;    /* body                               */
+
+  --ls-display: -0.02em;
+  --ls-tight:   -0.01em;
+  --ls-eyebrow:  0.18em;  /* letterspaced uppercase eyebrow   */
+
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  /* --- Spacing — strict 4/8 rhythm --------------------------------------- */
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* Section rhythm tiers */
+  --section-y:    clamp(4rem, 2rem + 8vw, 8rem);
+  --gutter:       clamp(1rem, 0.5rem + 3vw, 3rem);
+  --measure:      68ch;   /* long-form readable width */
+  --content-max:  1280px;
+
+  /* --- Radius / elevation ------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  8px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2: 0 12px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 56px rgba(0,0,0,0.55);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations paired to distance/complexity, per ui-ux-pro-max motion.csv. */
+  --dur-fast:   150ms;  /* hover feedback, <2px displacement */
+  --dur-base:   250ms;  /* card lift, color shifts           */
+  --dur-slow:   500ms;  /* section reveal                    */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);      /* power2.out-ish */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Breakpoints (documentation — CSS can't use vars in media queries) --
+     375px  small phone
+     768px  tablet
+     1024px laptop
+     1440px desktop                                                        */
+}
+
+/* ==========================================================================
+   Preview chrome — shared by every design-system card.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-wrap { padding: var(--space-6); }
+
+.ds-title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 var(--space-2);
+}
+
+.ds-note {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  margin: 0 0 var(--space-6);
+  max-width: var(--measure);
+}
+
+.ds-section + .ds-section { margin-top: var(--space-8); }
+
+.ds-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 var(--space-3);
+}
+
+/* Focus — visible in every preview, never removed. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Every clickable thing gets a pointer, per the skill's checklist. */
+:where(a, button, [role="button"], summary) { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */</style>
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .row:last-child { border-bottom: 0; }
+  .row__meta {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: var(--fs-xs);
+    color: var(--faint);
+    line-height: 1.5;
+  }
+  .row__meta b { display: block; color: var(--muted); font-weight: var(--fw-semi); }
+  .spec { color: var(--bone); margin: 0; }
+
+  .eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semi);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-hi);
+  }
+  .display {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    font-weight: var(--fw-medium);
+  }
+  .h1 { font-family: var(--font-display); font-size: var(--fs-4xl); line-height: var(--lh-snug); letter-spacing: var(--ls-display); font-weight: var(--fw-medium); }
+  .h2 { font-family: var(--font-display); font-size: var(--fs-3xl); line-height: var(--lh-snug); letter-spacing: var(--ls-display); font-weight: var(--fw-medium); }
+  .h3 { font-family: var(--font-display); font-size: var(--fs-2xl); line-height: var(--lh-snug); font-weight: var(--fw-medium); }
+  .card-title { font-family: var(--font-display); font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: var(--fw-medium); }
+  .lead { font-size: var(--fs-lg); line-height: var(--lh-normal); color: var(--muted); font-weight: var(--fw-light); }
+  .body { font-size: var(--fs-base); line-height: var(--lh-normal); }
+  .caption { font-size: var(--fs-sm); color: var(--muted); }
+
+  .pairing {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    margin-top: var(--space-5);
+  }
+  .demo {
+    padding: var(--space-6);
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+  }
+  .demo hr { border: 0; border-top: 1px solid var(--gold); width: 48px; margin: var(--space-4) 0; }
+  .demo p { max-width: 46ch; }
+</style>
+</head>
+<body>
+<div class="ds-wrap">
+
+  <div class="ds-section">
+    <p class="ds-title">Scale</p>
+    <p class="ds-note">
+      Ratio 1.25 (major third). Playfair Display carries every heading; Inter carries everything
+      read in sentences. Display is fluid and clamps between 44px and 95px.
+    </p>
+
+    <div class="row">
+      <div class="row__meta"><b>display</b>clamp 44→95px<br>lh 1.05 · ls −.02em</div>
+      <p class="spec display">Where architecture becomes legacy</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>4xl</b>49px<br>Playfair 500</div>
+      <p class="spec h1">Private collection</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>3xl</b>39px<br>Playfair 500</div>
+      <p class="spec h2">Selected residences</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>2xl</b>31px<br>Playfair 500</div>
+      <p class="spec h3">The Ridgeline House</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>xl</b>25px<br>Playfair 500</div>
+      <p class="spec card-title">Villa Aurelia</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>lg</b>20px<br>Inter 300</div>
+      <p class="spec lead">A lead paragraph sets the tone before the reader commits to the body copy below it.</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>base</b>16px<br>Inter 400</div>
+      <p class="spec body">Body copy. Set at sixteen pixels with a 1.6 line height and capped at 68 characters so the measure never runs long on a wide screen.</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>sm</b>14px<br>Inter 400</div>
+      <p class="spec caption">Caption and label text — specifications, figure credits, field labels.</p>
+    </div>
+    <div class="row">
+      <div class="row__meta"><b>xs</b>12px<br>Inter 600 · ls .18em</div>
+      <p class="spec eyebrow">Est. 1998 · Private Office</p>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">In context</p>
+    <div class="pairing">
+      <div class="demo">
+        <p class="eyebrow">Featured estate</p>
+        <h3 class="h3" style="margin:var(--space-3) 0 0">Casa del Acantilado</h3>
+        <hr>
+        <p class="body" style="margin:0">
+          Cantilevered over the ridge, the house reads as a single stone gesture — four bedrooms,
+          an infinity edge, and an olive terrace that predates the build by a century.
+        </p>
+        <p class="caption" style="margin:var(--space-4) 0 0">520 m² · 4 bed · 5 bath</p>
+      </div>
+      <div class="demo">
+        <p class="eyebrow">Editorial</p>
+        <h3 class="h3" style="margin:var(--space-3) 0 0">On restraint</h3>
+        <hr>
+        <p class="lead" style="margin:0">
+          The most expensive material in a house is the empty space you were disciplined enough
+          to leave alone.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <p class="ds-title">Rules</p>
+    <ul class="ds-note" style="padding-left:1.1rem; line-height:1.9">
+      <li>Playfair for headings and pull quotes only — never for UI labels or body.</li>
+      <li>Inter 300 is reserved for lead paragraphs at 20px+; it is too thin below that.</li>
+      <li>The eyebrow is the only uppercase style. Never uppercase a heading.</li>
+      <li>Body measure caps at 68ch. Long paragraphs never run edge-to-edge on desktop.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

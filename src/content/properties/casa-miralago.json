@@ -1,0 +1,21 @@
+{
+  "order": 8,
+  "price": 3100000,
+  "beds": 3, "baths": 3, "area": 310,
+  "type": "estate", "status": "sold", "featured": false,
+  "areaKey": "tarija",
+  "coords": { "lng": -64.7296, "lat": -21.5355 },
+  "image": "../../assets/properties/estate-oceanfront.jpg",
+  "es": {
+    "name": "Casa Miralago",
+    "area": "Lago Tarija",
+    "blurb": "Una terraza en voladizo sobre el agua; vendida en 2025 tras once días en cartera.",
+    "alt": "Terraza de villa en voladizo sobre el agua"
+  },
+  "en": {
+    "name": "Casa Miralago",
+    "area": "Lake Tarija",
+    "blurb": "A cantilevered terrace over the water; sold in 2025 after eleven days.",
+    "alt": "Cantilevered villa terrace over open water"
+  }
+}

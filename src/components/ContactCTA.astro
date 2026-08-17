@@ -1,0 +1,164 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+  properties: CollectionEntry<'properties'>[];
+}
+const { lang, properties } = Astro.props;
+const t = useTranslations(lang);
+
+// One form name per locale keeps the two submission streams separate in Netlify.
+const formName = `viewing-request-${lang}`;
+---
+
+<section class="cta-section" id="contact">
+  <div class="shell cta-grid">
+    <div class="cta-copy" data-reveal>
+      <p class="eyebrow">{t('contact.eyebrow')}</p>
+      <h2 class="cta-title">{t('contact.title')}</h2>
+      <p class="cta-lead">{t('contact.lead')}</p>
+      <p class="cta-privacy">{t('contact.privacy')}</p>
+    </div>
+
+    {/*
+      Netlify detects this by scanning the built static HTML. `data-netlify` is
+      stripped and `form-name` injected at deploy; we emit `form-name` ourselves
+      so the POST body is correct either way. `netlify-honeypot` adds spam
+      filtering without a CAPTCHA — no visitor is ever asked to prove humanity.
+    */}
+    <form
+      class="form"
+      name={formName}
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      action={lang === 'es' ? '/gracias/' : '/en/thanks/'}
+    >
+      <input type="hidden" name="form-name" value={formName} />
+      <p class="hp" hidden>
+        <label>Do not fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="row">
+        <div class="field">
+          <label for="c-name">{t('contact.name')} <span aria-hidden="true">*</span></label>
+          <input id="c-name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="c-email">{t('contact.email')} <span aria-hidden="true">*</span></label>
+          <input id="c-email" name="email" type="email" required autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="c-phone">{t('contact.phone')}</label>
+          <input id="c-phone" name="phone" type="tel" autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label for="c-interest">{t('contact.interest')}</label>
+          <div class="select">
+            <select id="c-interest" name="interest">
+              <option value="">{t('contact.interest.any')}</option>
+              {properties.map((p) => <option value={p.data[lang].name}>{p.data[lang].name}</option>)}
+            </select>
+            <Icon name="chevron-down" size={15} />
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="c-message">{t('contact.message')}</label>
+        <textarea id="c-message" name="message" rows="4" placeholder={t('contact.message.ph')}></textarea>
+      </div>
+
+      <button type="submit" class="submit" data-magnetic>
+        {t('contact.submit')}
+        <Icon name="arrow-right" />
+      </button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding-block: var(--section-y);
+    border-top: 1px solid var(--color-line);
+    scroll-margin-top: 5rem;
+  }
+  .cta-grid { display: grid; gap: 3rem; align-items: start; }
+
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+  .cta-title { margin: 0.75rem 0 0; font-size: var(--text-3xl); }
+  .cta-lead { margin: 1.5rem 0 0; font-size: var(--text-lg); font-weight: 300; color: var(--color-muted); max-width: 40ch; }
+  .cta-privacy { margin: 2rem 0 0; font-size: var(--text-xs); color: var(--color-faint); max-width: 40ch; }
+
+  .form { display: flex; flex-direction: column; gap: 1.5rem; }
+  .row { display: grid; gap: 1.5rem; }
+
+  .field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .field label { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .field label span { color: var(--color-gold-hi); }
+
+  .field input,
+  .field textarea,
+  .select select {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+    background: var(--color-stone);
+    border: 1px solid var(--color-line-hi);
+    border-radius: var(--radius-sm);
+    color: var(--color-bone);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    transition: border-color var(--dur-base) var(--ease-out-soft);
+  }
+  .field textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--color-faint); }
+  .field input:hover,
+  .field textarea:hover,
+  .select select:hover { border-color: var(--color-muted); }
+
+  /* Invalid styling only after the field has been touched, never on first paint. */
+  .field input:user-invalid,
+  .field textarea:user-invalid { border-color: #dc2626; }
+
+  .select { position: relative; display: flex; align-items: center; }
+  .select select { appearance: none; padding-right: 2.5rem; }
+  .select select option { background: var(--color-stone); color: var(--color-bone); }
+  .select :global(svg) { position: absolute; right: 1rem; color: var(--color-muted); pointer-events: none; }
+
+  .submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    align-self: flex-start;
+    min-height: 56px;
+    padding-inline: 2rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-gold);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    transition: background-color var(--dur-base) var(--ease-out-soft);
+  }
+  .submit:hover { background: var(--color-gold-hi); }
+
+  .hp { position: absolute; left: -9999px; }
+
+  @media (min-width: 640px) {
+    .row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    .cta-grid { grid-template-columns: 1fr 1.15fr; gap: 4rem; }
+  }
+</style>

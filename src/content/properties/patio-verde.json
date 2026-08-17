@@ -1,0 +1,21 @@
+{
+  "order": 4,
+  "price": 5300000,
+  "beds": 4, "baths": 4, "area": 610,
+  "type": "house", "status": "reserved", "featured": false,
+  "areaKey": "urubo",
+  "coords": { "lng": -63.2904, "lat": -17.7461 },
+  "image": "../../assets/properties/estate-courtyard.jpg",
+  "es": {
+    "name": "Patio Verde",
+    "area": "Urubó Hills",
+    "blurb": "Cuatro alas alrededor de un patio plantado; ninguna habitación mira hacia la calle.",
+    "alt": "Patio interior de una villa con iluminación cálida nocturna"
+  },
+  "en": {
+    "name": "Patio Verde",
+    "area": "Urubó Hills",
+    "blurb": "Four wings around a planted court; not one room faces the street.",
+    "alt": "Villa courtyard with warm evening lighting"
+  }
+}

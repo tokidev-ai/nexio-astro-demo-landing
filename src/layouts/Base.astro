@@ -1,0 +1,87 @@
+---
+import '../styles/global.css';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import playfairWoff2 from '@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2?url';
+import { useTranslations, localePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const esHref = new URL(localePath('es'), Astro.site).href;
+const enHref = new URL(localePath('en'), Astro.site).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t('meta.title')}</title>
+    <meta name="description" content={t('meta.description')} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={esHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={esHref} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0C0A09" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t('meta.title')} />
+    <meta property="og:description" content={t('meta.description')} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_BO' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/* The two faces that render above the fold. Hashed URLs come from Vite. */}
+    <link rel="preload" as="font" type="font/woff2" href={playfairWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
+
+    {/*
+      Marks the document as JS-capable BEFORE first paint. Everything the motion
+      layer hides is gated on `.js`, so a no-JS visitor or a crawler gets the
+      final readable state instead of a page of invisible sections.
+    */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a href="#main" class="skip">{t('nav.skip')}</a>
+    <slot />
+
+    <style>
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        padding: 0.75rem 1.25rem;
+        background: var(--color-gold);
+        color: #fff;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        border-radius: 0 0 var(--radius-md) 0;
+      }
+      .skip:focus {
+        left: 0;
+      }
+    </style>
+  </body>
+</html>
+
+<!--
+  Deliberately no <ClientRouter />. This site is two routes that differ only by
+  language, and a full navigation on the ES/EN swap is both correct and cheap.
+  Adding view transitions would mean tearing down and rebuilding every
+  ScrollTrigger, the Lenis instance, and the MapLibre canvas on each swap — real
+  complexity for no user-visible gain here.
+-->

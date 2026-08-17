@@ -1,0 +1,125 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import frontImage from '../assets/properties/int-terrace.jpg';
+import backImage from '../assets/properties/estate-courtyard.jpg';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="story" id="story">
+  <div class="shell story__grid">
+    <div class="story__copy" data-reveal>
+      <p class="eyebrow">{t('story.eyebrow')}</p>
+      <h2 class="story__title">{t('story.title')}</h2>
+      <blockquote class="story__pull">{t('story.p1')}</blockquote>
+      <p class="story__body">{t('story.p2')}</p>
+      <a href="#contact" class="link">
+        {t('story.cta')}
+        <Icon name="arrow-right" size={14} />
+      </a>
+    </div>
+
+    {/* Two layers moving at different speeds; decorative only, never text. */}
+    <div class="story__figure" data-parallax-scope>
+      <div class="layer layer--back" data-parallax="-6">
+        <Picture
+          src={backImage}
+          alt=""
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 320px, 45vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          loading="lazy"
+        />
+      </div>
+      <div class="layer layer--front" data-parallax="-14">
+        <Picture
+          src={frontImage}
+          alt={lang === 'es'
+            ? 'Terraza cubierta de una villa con vista a la piscina'
+            : 'Covered villa terrace looking onto the pool'}
+          widths={[500, 1000]}
+          sizes="(min-width: 1024px) 420px, 65vw"
+          formats={['avif', 'webp']}
+          fallbackFormat="jpg"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story { padding-block: var(--section-y); scroll-margin-top: 5rem; }
+
+  .story__grid { display: grid; gap: 3rem; align-items: center; }
+
+  .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--color-gold-hi); }
+  .story__title { margin: 0.75rem 0 0; font-size: var(--text-3xl); }
+
+  .story__pull {
+    margin: 2rem 0 0;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--color-gold);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    line-height: 1.45;
+    color: var(--color-bone);
+  }
+  .story__body {
+    margin: 1.5rem 0 0;
+    font-size: var(--text-base);
+    color: var(--color-muted);
+    max-width: 52ch;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-bottom: 2px;
+    color: var(--color-bone);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    background-image: linear-gradient(var(--color-gold), var(--color-gold));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--dur-base) var(--ease-out-soft);
+  }
+  .link:hover { background-size: 100% 1px; }
+
+  .story__figure { position: relative; min-height: 340px; }
+  .layer { border-radius: var(--radius-md); overflow: hidden; }
+  .layer :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .layer--back {
+    width: 55%;
+    aspect-ratio: 3 / 4;
+    margin-left: auto;
+    opacity: 0.75;
+  }
+  .layer--front {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 68%;
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow-3);
+    border: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 1024px) {
+    .story__grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .story__figure { min-height: 520px; }
+  }
+</style>

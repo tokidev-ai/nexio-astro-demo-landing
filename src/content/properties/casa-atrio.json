@@ -1,0 +1,21 @@
+{
+  "order": 7,
+  "price": 5900000,
+  "beds": 4, "baths": 5, "area": 690,
+  "type": "villa", "status": "available", "featured": false,
+  "areaKey": "urubo",
+  "coords": { "lng": -63.2733, "lat": -17.7290 },
+  "image": "../../assets/properties/int-atrium.jpg",
+  "es": {
+    "name": "Casa Atrio",
+    "area": "Urubó Hills",
+    "blurb": "Un atrio de doble altura con muro de vidrio de piso a techo hacia el agua.",
+    "alt": "Atrio de doble altura con muro de vidrio hacia la piscina"
+  },
+  "en": {
+    "name": "Casa Atrio",
+    "area": "Urubó Hills",
+    "blurb": "A double-height atrium walled in glass from floor to roof.",
+    "alt": "Double-height atrium with a full-height glass wall onto the pool"
+  }
+}

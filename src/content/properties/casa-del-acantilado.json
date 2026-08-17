@@ -1,0 +1,21 @@
+{
+  "order": 3,
+  "price": 4850000,
+  "beds": 4, "baths": 5, "area": 520,
+  "type": "house", "status": "available", "featured": false,
+  "areaKey": "santacruz",
+  "coords": { "lng": -63.1830, "lat": -17.7833 },
+  "image": "../../assets/properties/estate-dusk.jpg",
+  "es": {
+    "name": "Casa del Acantilado",
+    "area": "Santa Cruz de la Sierra",
+    "blurb": "Piedra local y un patio de agua que atraviesa la casa de lado a lado.",
+    "alt": "Villa de piedra al atardecer junto a una piscina iluminada"
+  },
+  "en": {
+    "name": "Casa del Acantilado",
+    "area": "Santa Cruz de la Sierra",
+    "blurb": "Local stone and a water court that runs clean through the house.",
+    "alt": "Stone villa at dusk beside a lit pool"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "order": 5,
+  "price": 7750000,
+  "beds": 5, "baths": 6, "area": 880,
+  "type": "villa", "status": "available", "featured": false,
+  "areaKey": "santacruz",
+  "coords": { "lng": -63.2015, "lat": -17.7602 },
+  "image": "../../assets/properties/estate-dubai.jpg",
+  "es": {
+    "name": "Casa Lineal",
+    "area": "Santa Cruz de la Sierra",
+    "blurb": "Una piscina de nado de veinticinco metros define el eje; todo lo demás se ordena detrás.",
+    "alt": "Villa moderna y ancha con piscina de nado y palmeras"
+  },
+  "en": {
+    "name": "Casa Lineal",
+    "area": "Santa Cruz de la Sierra",
+    "blurb": "A twenty-five metre lap pool sets the axis; everything else falls in behind it.",
+    "alt": "Wide modern villa with a lap pool and palms"
+  }
+}

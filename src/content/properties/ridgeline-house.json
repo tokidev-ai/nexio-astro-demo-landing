@@ -1,0 +1,21 @@
+{
+  "order": 2,
+  "price": 6200000,
+  "beds": 5, "baths": 6, "area": 740,
+  "type": "house", "status": "available", "featured": false,
+  "areaKey": "samaipata",
+  "coords": { "lng": -63.8721, "lat": -18.1794 },
+  "image": "../../assets/properties/estate-infinity.jpg",
+  "es": {
+    "name": "The Ridgeline House",
+    "area": "Samaipata Ridge",
+    "blurb": "Una sola línea horizontal de ochenta metros, apoyada en la cresta sin tocarla.",
+    "alt": "Villa moderna con una piscina alargada sobre la cresta"
+  },
+  "en": {
+    "name": "The Ridgeline House",
+    "area": "Samaipata Ridge",
+    "blurb": "A single eighty-metre horizontal, resting on the ridge without touching it.",
+    "alt": "Modern villa with a long infinity pool along a ridge"
+  }
+}
